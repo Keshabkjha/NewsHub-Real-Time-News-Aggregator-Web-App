@@ -1,0 +1,78 @@
+{% extends 'emails/base_email.html' %}
+
+{% block title %}New Articles Matching Your Alert - NewsHub{% endblock %}
+
+{% block header %}🔔 New Articles Match Your Alert{% endblock %}
+
+{% block content %}
+    <p>Hello {{ user.first_name|default:user.username }},</p>
+    
+    <p>We found {{ articles|length }} new article{{ articles|pluralize }} that match your alert for <strong>"{{ keyword }}"</strong>:</p>
+    
+    <div style="margin: 20px 0;">
+        {% for article in articles %}
+            <div class="article" style="margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #eeeeee;">
+                <h3 style="margin: 0 0 5px 0;">
+                    <a href="{{ site_url }}{% url 'article_detail' article.id %}" style="color: #1a73e8; text-decoration: none;">
+                        {{ article.title }}
+                    </a>
+                </h3>
+                <div class="article-meta" style="font-size: 13px; color: #5f6368; margin-bottom: 8px;">
+                    {{ article.source }} • {{ article.published_at|date:"F j, Y" }}
+                    {% if article.category %}
+                        <span style="background-color: #e8f0fe; color: #1a73e8; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 8px;">
+                            {{ article.category|title }}
+                        </span>
+                    {% endif %}
+                </div>
+                <p style="margin: 10px 0 15px 0; line-height: 1.5;">
+                    {{ article.summary|truncatewords:40 }}
+                </p>
+                <div>
+                    <a href="{{ site_url }}{% url 'article_detail' article.id %}" class="button" style="display: inline-block; padding: 8px 16px; background-color: #1a73e8; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; margin-right: 10px;">
+                        Read Full Article
+                    </a>
+                    <a href="{{ site_url }}{% url 'bookmark_add' article.id %}?next={{ request.path|urlencode }}" style="color: #5f6368; text-decoration: none; font-size: 13px; display: inline-flex; align-items: center;">
+                        <span style="margin-right: 5px;">🔖</span> Save for later
+                    </a>
+                </div>
+                
+                {% if not forloop.last %}
+                    <div style="margin-top: 20px;"></div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div style="margin: 30px 0; text-align: center;">
+        <a href="{{ site_url }}{% url 'alert_list' %}" class="button" style="background-color: #fbbc04; color: #202124;">
+            Manage Your Alerts
+        </a>
+        <p style="font-size: 12px; color: #5f6368; margin-top: 10px;">
+            You're receiving this email because you set up an alert for "{{ keyword }}".
+        </p>
+    </div>
+    
+    <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 25px 0;">
+        <h3 style="margin-top: 0; margin-bottom: 10px; font-size: 16px;">💡 Did You Know?</h3>
+        <p style="margin: 0; font-size: 14px; line-height: 1.5;">
+            You can refine your alerts to be more specific by using advanced search operators like 
+            <code style="background-color: #e8f0fe; padding: 2px 5px; border-radius: 3px; font-size: 12px;">AND</code>, 
+            <code style="background-color: #e8f0fe; padding: 2px 5px; border-radius: 3px; font-size: 12px;">OR</code>, and 
+            <code style="background-color: #e8f0fe; padding: 2px 5px; border-radius: 3px; font-size: 12px;">NOT</code>.
+            Try "climate change" AND "renewable energy" to narrow down your results.
+        </p>
+    </div>
+    
+    <p style="margin-bottom: 5px;">Happy reading!</p>
+    <p style="margin: 0;">The NewsHub Team</p>
+    
+    <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #eeeeee; font-size: 12px; color: #9aa0a6;">
+        <p style="margin: 5px 0;">
+            <strong>Alert details:</strong> "{{ keyword }}" 
+            • {{ notification_frequency }}
+            • <a href="{{ site_url }}{% url 'alert_edit' alert_id %}" style="color: #1a73e8; text-decoration: none;">Edit</a> 
+            | <a href="{{ site_url }}{% url 'alert_delete' alert_id %}" style="color: #d93025; text-decoration: none;">Delete</a>
+        </p>
+    </div>
+{% endblock %}

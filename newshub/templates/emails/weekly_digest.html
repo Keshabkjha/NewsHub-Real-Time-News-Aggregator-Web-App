@@ -1,0 +1,108 @@
+{% extends 'emails/base_email.html' %}
+
+{% block title %}Your Weekly News Digest - NewsHub{% endblock %}
+
+{% block header %}Your Weekly News Digest{% endblock %}
+
+{% block content %}
+    <p>Hello {{ user.first_name|default:user.username }},</p>
+    
+    <p>Here's a summary of the most important news from the past week ({{ start_date|date:"M j" }} - {{ end_date|date:"M j, Y" }}):</p>
+    
+    <h2>📊 Week in Review</h2>
+    <p>You've been keeping up with {{ article_count }} articles this week. Here are the highlights:</p>
+    
+    {% if most_read_articles %}
+        <h3>📖 Your Most Read Stories</h3>
+        {% for article in most_read_articles %}
+            <div class="article">
+                <h4>{{ article.title }}</h4>
+                <div class="article-meta">
+                    {{ article.source }} • {{ article.published_at|date:"M j, Y" }}
+                    {% if article.category %}<span style="background-color: #e8f0fe; color: #1a73e8; padding: 2px 6px; border-radius: 10px; font-size: 11px; margin-left: 8px;">{{ article.category|title }}</span>{% endif %}
+                </div>
+                <p>{{ article.summary|truncatewords:25 }}</p>
+                <a href="{{ site_url }}{% url 'article_detail' article.id %}" class="button" style="padding: 6px 12px; font-size: 13px;">Read Again</a>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    {% if trending_week %}
+        <h3>🔥 Trending This Week</h3>
+        {% for article in trending_week %}
+            <div class="article">
+                <h4>{{ article.title }}</h4>
+                <div class="article-meta">
+                    {{ article.source }} • {{ article.published_at|date:"M j, Y" }}
+                    {% if article.category %}<span style="background-color: #e8f0fe; color: #1a73e8; padding: 2px 6px; border-radius: 10px; font-size: 11px; margin-left: 8px;">{{ article.category|title }}</span>{% endif %}
+                </div>
+                <p>{{ article.summary|truncatewords:25 }}</p>
+                <a href="{{ site_url }}{% url 'article_detail' article.id %}" class="button" style="padding: 6px 12px; font-size: 13px;">Read More</a>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    {% if recommended_weekly %}
+        <h3>✨ Recommended Just For You</h3>
+        <p>Based on your reading history, we think you'll enjoy these stories:</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin: 20px 0;">
+            {% for article in recommended_weekly|slice:":3" %}
+                <div style="border: 1px solid #e0e0e0; border-radius: 5px; padding: 15px;">
+                    <h4 style="margin-top: 0;">{{ article.title }}</h4>
+                    <div style="font-size: 12px; color: #757575; margin-bottom: 10px;">
+                        {{ article.source }}
+                        {% if article.category %}<span style="background-color: #e8f0fe; color: #1a73e8; padding: 1px 5px; border-radius: 10px; font-size: 10px; margin-left: 5px;">{{ article.category|upper }}</span>{% endif %}
+                    </div>
+                    <p style="font-size: 13px;">{{ article.summary|truncatewords:20 }}</p>
+                    <a href="{{ site_url }}{% url 'article_detail' article.id %}" style="color: #1a73e8; font-size: 13px; text-decoration: none;">Read more →</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    {% if weekly_topics %}
+        <h3>📌 Your Weekly Topics</h3>
+        <p>Here's what's happening in topics you follow:</p>
+        <div style="margin: 15px 0;">
+            {% for topic, articles in weekly_topics.items %}
+                <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0;">
+                    <h4 style="margin: 0 0 10px 0; color: #1a73e8;">#{{ topic|title }}</h4>
+                    <div style="margin-left: 15px;">
+                        {% for article in articles|slice:":2" %}
+                            <div style="margin-bottom: 10px;">
+                                <a href="{{ site_url }}{% url 'article_detail' article.id %}" style="color: #202124; text-decoration: none; font-weight: 500;">{{ article.title }}</a>
+                                <div style="font-size: 12px; color: #757575;">{{ article.source }} • {{ article.published_at|date:"M j" }}</div>
+                            </div>
+                        {% endfor %}
+                        <a href="{{ site_url }}{% url 'category' topic %}" style="color: #1a73e8; font-size: 13px; text-decoration: none;">View all {{ topic }} stories →</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin: 25px 0; text-align: center;">
+        <h3 style="margin-top: 0;">📈 Your Weekly Reading Stats</h3>
+        <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin: 15px 0;">
+            <div style="margin: 10px;">
+                <div style="font-size: 24px; font-weight: bold; color: #1a73e8;">{{ article_count }}</div>
+                <div style="font-size: 13px; color: #5f6368;">Articles Read</div>
+            </div>
+            <div style="margin: 10px;">
+                <div style="font-size: 24px; font-weight: bold; color: #1a73e8;">{{ category_count }}</div>
+                <div style="font-size: 13px; color: #5f6368;">Categories Explored</div>
+            </div>
+            <div style="margin: 10px;">
+                <div style="font-size: 24px; font-weight: bold; color: #1a73e8;">{{ top_category|default:"-" }}</div>
+                <div style="font-size: 13px; color: #5f6368;">Top Category</div>
+            </div>
+        </div>
+        <a href="{{ site_url }}/dashboard" class="button" style="background-color: #34a853; margin-top: 10px;">View Full Dashboard</a>
+    </div>
+    
+    <div style="text-align: center; margin: 30px 0;">
+        <a href="{{ site_url }}" class="button" style="background-color: #1a73e8;">Continue Reading on NewsHub</a>
+    </div>
+    
+    <p>See you next week for more updates!<br>The NewsHub Team</p>
+{% endblock %}

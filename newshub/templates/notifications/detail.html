@@ -1,0 +1,106 @@
+{% extends 'notifications/base.html' %}
+
+{% block head_title %}Notification - {{ notification.title }}{% endblock %}
+
+{% block notifications_content %}
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+        <div class="p-6">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    {% if notification.notification_type == 'keyword_alert' %}
+                        <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 text-blue-600">
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    {% elif notification.notification_type == 'recommendation' %}
+                        <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-green-100 text-green-600">
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    {% elif notification.notification_type == 'system' %}
+                        <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-gray-100 text-gray-600">
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    {% else %}
+                        <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-gray-100 text-gray-600">
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                            </svg>
+                        </span>
+                    {% endif %}
+                </div>
+                <div class="ml-4">
+                    <div class="flex items-center">
+                        <h2 class="text-lg font-medium text-gray-900">{{ notification.title }}</h2>
+                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            {{ notification.get_notification_type_display }}
+                        </span>
+                    </div>
+                    <p class="mt-1 text-sm text-gray-500">
+                        {{ notification.created_at|date:"F j, Y, g:i a" }}
+                    </p>
+                </div>
+            </div>
+            
+            <div class="mt-6 prose prose-blue prose-sm max-w-none">
+                <p class="text-gray-700">{{ notification.message|linebreaksbr }}</p>
+                
+                {% if notification.content_object %}
+                    <div class="mt-6 border-t border-gray-200 pt-6">
+                        <h3 class="text-sm font-medium text-gray-900">Related Content</h3>
+                        <div class="mt-2 flex items-center">
+                            {% if notification.content_object.get_absolute_url %}
+                                <a href="{{ notification.content_object.get_absolute_url }}" class="text-sm font-medium text-blue-600 hover:text-blue-500">
+                                    View {{ notification.content_object._meta.verbose_name }}
+                                </a>
+                            {% else %}
+                                <span class="text-sm text-gray-500">No related content available</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if notification.url %}
+                    <div class="mt-6 border-t border-gray-200 pt-6">
+                        <h3 class="text-sm font-medium text-gray-900">Action</h3>
+                        <div class="mt-2">
+                            <a href="{{ notification.url }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                View details
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-200 flex justify-between">
+                <a href="{% url 'notifications:list' %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                    <svg class="mr-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    Back to all notifications
+                </a>
+                
+                <div class="space-x-3">
+                    <form action="{% url 'notifications:mark_read' notification.id %}" method="POST" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            {% if notification.read %}
+                                Mark as Unread
+                            {% else %}
+                                Mark as Read
+                            {% endif %}
+                        </button>
+                    </form>
+                    
+                    <a href="#" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                        Delete
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

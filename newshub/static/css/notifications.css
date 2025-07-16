@@ -1,0 +1,108 @@
+/* Notification styles */
+.notification-item {
+    @apply border-l-4 border-transparent transition-colors duration-200;
+}
+
+.notification-item.unread {
+    @apply bg-blue-50 border-blue-500;
+}
+
+.notification-item:hover {
+    @apply bg-gray-50;
+}
+
+.notification-item.unread:hover {
+    @apply bg-blue-50;
+}
+
+.notification-dot {
+    @apply inline-block w-2 h-2 rounded-full bg-blue-500 mr-2;
+}
+
+/* Notification preferences */
+.notification-preference-item {
+    @apply p-4 border-b border-gray-200 last:border-b-0;
+}
+
+.notification-preference-item:hover {
+    @apply bg-gray-50;
+}
+
+/* Toggle switch */
+.toggle-switch {
+    @apply relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500;
+}
+
+.toggle-switch:disabled {
+    @apply opacity-50 cursor-not-allowed;
+}
+
+.toggle-switch-enabled {
+    @apply bg-blue-600;
+}
+
+.toggle-switch-disabled {
+    @apply bg-gray-200;
+}
+
+.toggle-switch-handle {
+    @apply inline-block w-4 h-4 transform bg-white rounded-full transition-transform;
+}
+
+.toggle-switch-handle-enabled {
+    @apply translate-x-6;
+}
+
+.toggle-switch-handle-disabled {
+    @apply translate-x-1;
+}
+
+/* Empty state */
+.empty-state {
+    @apply text-center py-12;
+}
+
+.empty-state-icon {
+    @apply mx-auto h-12 w-12 text-gray-400;
+}
+
+.empty-state-title {
+    @apply mt-2 text-sm font-medium text-gray-900;
+}
+
+.empty-state-description {
+    @apply mt-1 text-sm text-gray-500;
+}
+
+/* Loading state */
+.loading-spinner {
+    @apply animate-spin h-5 w-5 text-blue-600 mx-auto;
+}
+
+/* Notification type badges */
+.notification-type-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.notification-type-keyword {
+    @apply bg-purple-100 text-purple-800;
+}
+
+.notification-type-digest {
+    @apply bg-blue-100 text-blue-800;
+}
+
+.notification-type-system {
+    @apply bg-yellow-100 text-yellow-800;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .notification-actions {
+        @apply mt-2 flex-shrink-0;
+    }
+    
+    .notification-content {
+        @apply flex-1 min-w-0;
+    }
+}

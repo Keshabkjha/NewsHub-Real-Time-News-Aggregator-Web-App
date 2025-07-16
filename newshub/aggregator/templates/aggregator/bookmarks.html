@@ -1,0 +1,23 @@
+{% extends "aggregator/base.html" %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">🔖 Your Bookmarked Articles</h2>
+    <div class="row">
+        {% for bookmark in bookmarks %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow">
+                {% if bookmark.article.image_url %}
+                    <img src="{{ bookmark.article.image_url }}" class="card-img-top">
+                {% endif %}
+                <div class="card-body">
+                    <h5><a href="{{ bookmark.article.url }}" target="_blank">{{ bookmark.article.title }}</a></h5>
+                    <p><small>{{ bookmark.article.source }} | {{ bookmark.article.published_at|date:"M d, Y" }}</small></p>
+                    <p>{{ bookmark.article.summary }}</p>
+                    <a href="{% url 'remove_bookmark' bookmark.article.id %}" class="btn btn-sm btn-outline-danger">Remove</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

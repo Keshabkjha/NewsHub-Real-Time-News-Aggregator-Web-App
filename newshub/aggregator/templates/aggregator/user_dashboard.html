@@ -1,0 +1,39 @@
+{% extends "aggregator/base.html" %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">📊 Your Activity Dashboard</h2>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="p-3 border bg-light text-center">
+                <h4>{{ bookmarks_count }}</h4>
+                <p>Bookmarks</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 border bg-light text-center">
+                <h4>{{ alerts_count }}</h4>
+                <p>Keyword Alerts</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 border bg-light text-center">
+                <h4>{{ clicks_count }}</h4>
+                <p>Alert Clicks</p>
+            </div>
+        </div>
+    </div>
+
+    <h4>🔥 Most Clicked Keywords</h4>
+    <ul class="list-group">
+        {% for item in most_clicked %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ item.keyword }}
+                <span class="badge bg-primary rounded-pill">{{ item.total }}</span>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No keyword clicks recorded yet.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

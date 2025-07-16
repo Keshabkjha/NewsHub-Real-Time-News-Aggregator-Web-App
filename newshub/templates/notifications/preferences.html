@@ -1,0 +1,275 @@
+{% extends 'notifications/base.html' %}
+
+{% block head_title %}Notification Preferences{% endblock %}
+
+{% block notifications_content %}
+    <div class="space-y-6">
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+            <div class="px-4 py-5 sm:p-6">
+                <h2 class="text-lg font-medium leading-6 text-gray-900">Email Notifications</h2>
+                <p class="mt-1 text-sm text-gray-500">Manage how you receive email notifications from NewsHub.</p>
+                
+                <form method="post" class="mt-5">
+                    {% csrf_token %}
+                    
+                    <div class="space-y-4">
+                        <!-- Email Frequency -->
+                        <div class="border-b border-gray-200 pb-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-base font-medium text-gray-900">Email Digest</h3>
+                                    <p class="text-sm text-gray-500">How often would you like to receive email digests?</p>
+                                </div>
+                                <div class="w-64">
+                                    <select name="email_digest_frequency" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                        <option value="never" {% if form.email_digest_frequency.value == 'never' %}selected{% endif %}>Never</option>
+                                        <option value="daily" {% if form.email_digest_frequency.value == 'daily' %}selected{% endif %}>Daily</option>
+                                        <option value="weekly" {% if form.email_digest_frequency.value == 'weekly' %}selected{% endif %}>Weekly</option>
+                                    </select>
+                                    {% if form.email_digest_frequency.errors %}
+                                        <p class="mt-2 text-sm text-red-600">{{ form.email_digest_frequency.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Notification Channels -->
+                        <div class="border-b border-gray-200 pb-4">
+                            <h3 class="text-base font-medium text-gray-900">Notification Channels</h3>
+                            <p class="text-sm text-gray-500">Choose how you want to receive different types of notifications.</p>
+                            
+                            <div class="mt-4 space-y-4">
+                                <!-- Keyword Alerts -->
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Keyword Alerts</label>
+                                        <p class="text-sm text-gray-500">When new articles match your saved keywords</p>
+                                    </div>
+                                    <div class="w-64">
+                                        <select name="keyword_alerts" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                            <option value="email" {% if form.keyword_alerts.value == 'email' %}selected{% endif %}>Email</option>
+                                            <option value="web" {% if form.keyword_alerts.value == 'web' %}selected{% endif %}>In-app only</option>
+                                            <option value="push" {% if form.keyword_alerts.value == 'push' %}selected{% endif %}>Push notifications</option>
+                                            <option value="none" {% if form.keyword_alerts.value == 'none' %}selected{% endif %}>Don't notify me</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Recommended Articles -->
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Recommended Articles</label>
+                                        <p class="text-sm text-gray-500">When we find articles you might like</p>
+                                    </div>
+                                    <div class="w-64">
+                                        <select name="recommended_articles" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                            <option value="email" {% if form.recommended_articles.value == 'email' %}selected{% endif %}>Email</option>
+                                            <option value="web" {% if form.recommended_articles.value == 'web' %}selected{% endif %}>In-app only</option>
+                                            <option value="push" {% if form.recommended_articles.value == 'push' %}selected{% endif %}>Push notifications</option>
+                                            <option value="none" {% if form.recommended_articles.value == 'none' %}selected{% endif %}>Don't notify me</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Trending Articles -->
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Trending Articles</label>
+                                        <p class="text-sm text-gray-500">When articles you follow become popular</p>
+                                    </div>
+                                    <div class="w-64">
+                                        <select name="trending_articles" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                            <option value="email" {% if form.trending_articles.value == 'email' %}selected{% endif %}>Email</option>
+                                            <option value="web" {% if form.trending_articles.value == 'web' %}selected{% endif %}>In-app only</option>
+                                            <option value="push" {% if form.trending_articles.value == 'push' %}selected{% endif %}>Push notifications</option>
+                                            <option value="none" {% if form.trending_articles.value == 'none' %}selected{% endif %}>Don't notify me</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- System Messages -->
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">System Messages</label>
+                                        <p class="text-sm text-gray-500">Important updates about your account</p>
+                                    </div>
+                                    <div class="w-64">
+                                        <select name="system_messages" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                            <option value="email" {% if form.system_messages.value == 'email' %}selected{% endif %}>Email</option>
+                                            <option value="web" {% if form.system_messages.value == 'web' %}selected{% endif %}>In-app only</option>
+                                            <option value="push" {% if form.system_messages.value == 'push' %}selected{% endif %}>Push notifications</option>
+                                            <option value="none" {% if form.system_messages.value == 'none' %}selected{% endif %}>Don't notify me</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Push Notifications -->
+                        <div class="border-b border-gray-200 pb-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-base font-medium text-gray-900">Push Notifications</h3>
+                                    <p class="text-sm text-gray-500">Receive notifications in your browser</p>
+                                </div>
+                                <div>
+                                    <button type="button" id="enable-push-btn" class="{% if has_push_subscription %}hidden{% endif %} inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Enable Push Notifications
+                                    </button>
+                                    <div id="push-enabled" class="{% if not has_push_subscription %}hidden{% endif %} flex items-center text-sm text-green-600">
+                                        <svg class="h-5 w-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                        Push notifications enabled
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {% if push_subscriptions %}
+                                <div class="mt-4">
+                                    <h4 class="text-sm font-medium text-gray-700">Active Devices</h4>
+                                    <ul class="mt-2 space-y-2">
+                                        {% for sub in push_subscriptions %}
+                                            <li class="flex items-center justify-between text-sm">
+                                                <div>
+                                                    <span class="font-medium">
+                                                        {% if sub.browser %}{{ sub.browser }}{% else %}Unknown Browser{% endif %}
+                                                    </span>
+                                                    <span class="text-gray-500 ml-2">
+                                                        {% if sub.os %}{{ sub.os }}{% endif %}
+                                                        {% if sub.device and sub.device != 'Other' %}({{ sub.device }}){% endif %}
+                                                    </span>
+                                                </div>
+                                                <button type="button" data-subscription-id="{{ sub.id }}" class="text-red-600 hover:text-red-800 text-sm font-medium">
+                                                    Remove
+                                                </button>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Save Button -->
+                        <div class="pt-4 flex justify-end">
+                            <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                Save Preferences
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Email Notification Preferences -->
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+            <div class="px-4 py-5 sm:p-6">
+                <h2 class="text-lg font-medium leading-6 text-gray-900">Email Subscription</h2>
+                <p class="mt-1 text-sm text-gray-500">Manage your email subscription preferences.</p>
+                
+                <div class="mt-6">
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="marketing_emails" name="marketing_emails" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" {% if user.notification_preferences.marketing_emails %}checked{% endif %}>
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="marketing_emails" class="font-medium text-gray-700">Receive marketing emails</label>
+                            <p class="text-gray-500">Get updates about new features, products, and special offers.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 pt-4 border-t border-gray-200">
+                        <button type="button" class="text-sm font-medium text-red-600 hover:text-red-500">
+                            Unsubscribe from all emails
+                        </button>
+                        <p class="mt-1 text-xs text-gray-500">This will stop all email communications from NewsHub.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Push Notification Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const enablePushBtn = document.getElementById('enable-push-btn');
+        const pushEnabled = document.getElementById('push-enabled');
+        
+        if (enablePushBtn) {
+            enablePushBtn.addEventListener('click', function() {
+                // Request permission for notifications
+                if ('Notification' in window) {
+                    Notification.requestPermission().then(function(permission) {
+                        if (permission === 'granted') {
+                            // Get the service worker registration
+                            navigator.serviceWorker.ready.then(function(registration) {
+                                // Subscribe to push notifications
+                                registration.pushManager.subscribe({
+                                    userVisibleOnly: true,
+                                    applicationServerKey: '{{ vapid_public_key|escapejs }}'
+                                })
+                                .then(function(subscription) {
+                                    // Send subscription to server
+                                    return fetch('{% url "notifications:push_subscribe" %}', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRFToken': '{{ csrf_token }}'
+                                        },
+                                        body: JSON.stringify({
+                                            subscription: subscription
+                                        })
+                                    });
+                                })
+                                .then(function(response) {
+                                    if (response.ok) {
+                                        // Update UI
+                                        enablePushBtn.classList.add('hidden');
+                                        pushEnabled.classList.remove('hidden');
+                                        location.reload();
+                                    } else {
+                                        console.error('Failed to save subscription');
+                                    }
+                                })
+                                .catch(function(error) {
+                                    console.error('Error subscribing to push notifications:', error);
+                                });
+                            });
+                        } else {
+                            console.warn('Notification permission denied');
+                        }
+                    });
+                } else {
+                    console.warn('Push notifications not supported');
+                }
+            });
+        }
+        
+        // Handle remove subscription buttons
+        document.querySelectorAll('[data-subscription-id]').forEach(button => {
+            button.addEventListener('click', function() {
+                const subscriptionId = this.getAttribute('data-subscription-id');
+                if (confirm('Are you sure you want to remove this device?')) {
+                    fetch(`/notifications/push/unsubscribe/${subscriptionId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            console.error('Failed to remove subscription');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error removing subscription:', error);
+                    });
+                }
+            });
+        });
+    });
+    </script>
+{% endblock %}

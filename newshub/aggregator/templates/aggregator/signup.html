@@ -1,0 +1,11 @@
+{% extends "aggregator/base.html" %}
+{% block content %}
+<div class="container py-5" style="max-width: 500px;">
+    <h2 class="mb-4">Create an Account</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+    </form>
+</div>
+{% endblock %}

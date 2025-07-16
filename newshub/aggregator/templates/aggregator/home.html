@@ -1,0 +1,49 @@
+{% extends "aggregator/base.html" %}
+{% block content %}
+<div class="container py-4">
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-6">
+            <input type="text" name="q" class="form-control" placeholder="Search..." value="{{ query }}">
+        </div>
+        <div class="col-md-4">
+            <select name="category" class="form-select">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                    <option value="{{ cat }}" {% if cat == selected_category %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </form>
+
+    <div class="row">
+        {% for article in articles %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                {% if article.image_url %}
+                <img src="{{ article.image_url }}" class="card-img-top" alt="Image">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{{ article.url }}" target="_blank">{{ article.title }}</a>
+                    </h5>
+                    <p class="card-text"><small class="text-muted">{{ article.source }} | {{ article.published_at|date:"M d, Y" }}</small></p>
+                    <p class="card-text">{{ article.summary }}</p>
+                    
+                
+                    {% if user.is_authenticated %}
+                        {% if article.id in bookmarked_ids %}
+                            <a href="{% url 'remove_bookmark' article.id %}" class="btn btn-sm btn-outline-danger">Remove Bookmark</a>
+                        {% else %}
+                            <a href="{% url 'add_bookmark' article.id %}" class="btn btn-sm btn-outline-success">Bookmark</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+Django==4.2.0
+gunicorn==20.1.0
+whitenoise==6.5.0
+requests==2.31.0
+transformers==4.30.2
+newspaper3k==0.2.8
+torch==2.0.1
+sentry-sdk==1.22.1
+webpush==1.0.0

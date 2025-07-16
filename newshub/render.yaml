@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: newshub
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn newshub.wsgi:application
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        value: your-secret-key
+      - key: DJANGO_DEBUG
+        value: false
+      - key: EMAIL_HOST_USER
+        value: your-email@gmail.com
+      - key: EMAIL_HOST_PASSWORD
+        value: your-password
+      - key: VAPID_PUBLIC_KEY
+        value: your-public-key
+      - key: VAPID_PRIVATE_KEY
+        value: your-private-key

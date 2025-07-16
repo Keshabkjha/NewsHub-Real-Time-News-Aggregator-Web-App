@@ -1,0 +1,25 @@
+{% extends "aggregator/base.html" %}
+{% block content %}
+<div class="container py-4" style="max-width: 600px;">
+    <h2 class="mb-4">🔔 Keyword Alerts</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <input type="text" name="keyword" class="form-control" placeholder="Enter keyword (e.g. AI, climate, Bitcoin)">
+            <button class="btn btn-outline-primary" type="submit">Add Alert</button>
+        </div>
+    </form>
+
+    <ul class="list-group">
+        {% for k in keywords %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ k.keyword }}
+            <a href="{% url 'delete_keyword' k.keyword %}" class="btn btn-sm btn-outline-danger">Remove</a>
+        </li>
+        {% empty %}
+            <li class="list-group-item">No keywords added yet.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

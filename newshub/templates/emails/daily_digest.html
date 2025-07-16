@@ -1,0 +1,62 @@
+{% extends 'emails/base_email.html' %}
+
+{% block title %}Your Daily News Digest - NewsHub{% endblock %}
+
+{% block header %}Your Daily News Digest{% endblock %}
+
+{% block content %}
+    <p>Hello {{ user.first_name|default:user.username }},</p>
+    
+    <p>Here are the top stories we've picked for you today, {{ date|date:"F j, Y" }}:</p>
+    
+    {% if trending_articles %}
+        <h2>🔥 Trending Now</h2>
+        {% for article in trending_articles|slice:":3" %}
+            <div class="article">
+                <h3>{{ article.title }}</h3>
+                <div class="article-meta">
+                    {{ article.source }} • {{ article.published_at|date:"M j, Y" }}
+                    {% if article.category %}<span style="background-color: #e8f0fe; color: #1a73e8; padding: 2px 6px; border-radius: 10px; font-size: 11px; margin-left: 8px;">{{ article.category|title }}</span>{% endif %}
+                </div>
+                <p>{{ article.summary|truncatewords:30 }}</p>
+                <a href="{{ site_url }}{% url 'article_detail' article.id %}" class="button">Read More</a>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    {% if recommended_articles %}
+        <h2>📰 Recommended For You</h2>
+        {% for article in recommended_articles|slice:":3" %}
+            <div class="article">
+                <h3>{{ article.title }}</h3>
+                <div class="article-meta">
+                    {{ article.source }} • {{ article.published_at|date:"M j, Y" }}
+                    {% if article.category %}<span style="background-color: #e8f0fe; color: #1a73e8; padding: 2px 6px; border-radius: 10px; font-size: 11px; margin-left: 8px;">{{ article.category|title }}</span>{% endif %}
+                </div>
+                <p>{{ article.summary|truncatewords:30 }}</p>
+                <a href="{{ site_url }}{% url 'article_detail' article.id %}" class="button">Read More</a>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    {% if followed_topics_articles %}
+        <h2>📌 From Your Followed Topics</h2>
+        {% for article in followed_topics_articles|slice:":3" %}
+            <div class="article">
+                <h3>{{ article.title }}</h3>
+                <div class="article-meta">
+                    {{ article.source }} • {{ article.published_at|date:"M j, Y" }}
+                    {% if article.category %}<span style="background-color: #e8f0fe; color: #1a73e8; padding: 2px 6px; border-radius: 10px; font-size: 11px; margin-left: 8px;">{{ article.category|title }}</span>{% endif %}
+                </div>
+                <p>{{ article.summary|truncatewords:30 }}</p>
+                <a href="{{ site_url }}{% url 'article_detail' article.id %}" class="button">Read More</a>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div style="text-align: center; margin: 30px 0;">
+        <a href="{{ site_url }}" class="button" style="background-color: #34a853;">View All Stories</a>
+    </div>
+    
+    <p>Happy reading!<br>The NewsHub Team</p>
+{% endblock %}

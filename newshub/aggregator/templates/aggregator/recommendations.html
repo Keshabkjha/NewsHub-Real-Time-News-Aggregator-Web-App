@@ -1,0 +1,24 @@
+{% extends "aggregator/base.html" %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">🤖 Recommended For You</h2>
+    <div class="row">
+        {% for article in recommended %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                {% if article.image_url %}
+                    <img src="{{ article.image_url }}" class="card-img-top">
+                {% endif %}
+                <div class="card-body">
+                    <h5><a href="{{ article.url }}" target="_blank">{{ article.title }}</a></h5>
+                    <p><small>{{ article.source }} | {{ article.published_at|date:"M d, Y" }}</small></p>
+                    <p>{{ article.summary }}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No recommendations available. Bookmark some articles first!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

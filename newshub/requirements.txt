@@ -29,3 +29,4 @@ scikit-learn
 nltk
 pywebpush
 python-magic-bin; sys_platform == 'win32'
+django-csp>=6.0.0
